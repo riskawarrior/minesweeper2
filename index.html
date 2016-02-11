@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Minesweeper2</title>
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="minesweeper.js"></script>
+
+    <style type="text/css">
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+        td {
+            border: 1px solid black;
+            width: 1.5em;
+            height: 1.5em;
+            margin: 0;
+            cursor: pointer;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="game"></div>
+<div id="controls">
+    <form onsubmit="return newGame();">
+        <label for="rows">Rows: </label>
+        <input id="rows" name="rows" type="number" value="10"/><br/>
+        <label for="cols">Cols: </label>
+        <input id="cols" name="cols" type="number" value="10"/><br/>
+        <label for="mines">Mines: </label>
+        <input id="mines" name="mines" type="number" value="10"/><br/>
+        <input name="submit" type="submit" value="New Game">
+    </form>
+</div>
+<script type="text/javascript">
+    var newGame = function () {
+        minesweeper.newGame(cols.value, rows.value, mines.value);
+        return false;
+    };
+
+    $(function () {
+        minesweeper.init('#game');
+        minesweeper.setWinHandler(function () {
+            alert('You won, YaaaY!');
+        });
+        minesweeper.setLoseHandler(function () {
+            alert('Bad luck');
+        });
+        minesweeper.newGame(10, 10, 10);
+    });
+</script>
+</body>
+</html>

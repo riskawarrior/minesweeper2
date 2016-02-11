@@ -1,0 +1,23 @@
+{
+  "name": "minesweeper2",
+  "authors": [
+    "András Rutkai <riskawarrior@live.com>"
+  ],
+  "description": "Another Minesweeper implementation",
+  "keywords": [
+    "minesweeper",
+    "jQuery"
+  ],
+  "homepage": "https://github.com/riskawarrior/minesweeper2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "2.*"
+  },
+  "license": "MIT"
+}
