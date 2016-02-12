@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Minesweeper2</title>
     <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="minesweeper.js"></script>
+    <script type="text/javascript" src="dist/minesweeper2.js"></script>
 
     <style type="text/css">
         body {
@@ -40,20 +40,22 @@
     </form>
 </div>
 <script type="text/javascript">
+    var game;
+
     var newGame = function () {
-        minesweeper.newGame(cols.value, rows.value, mines.value);
+        game.newGame(cols.value, rows.value, mines.value);
         return false;
     };
 
     $(function () {
-        minesweeper.init('#game');
-        minesweeper.setWinHandler(function () {
+        game = new Minesweeper2('#game');
+        game.setWinHandler(function () {
             alert('You won, YaaaY!');
         });
-        minesweeper.setLoseHandler(function () {
+        game.setLoseHandler(function () {
             alert('Bad luck');
         });
-        minesweeper.newGame(10, 10, 10);
+        game.newGame(10, 10, 10);
     });
 </script>
 </body>

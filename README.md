@@ -12,18 +12,18 @@ Clone the repository:
 Include Minesweeper2 in your webpage:
 
     <!-- Don't forget to include jQuery! -->
-    <script type="text/javascript" src="minesweeper.js"></script>
+    <script type="text/javascript" src="dist/minesweeper2.js"></script>
 
 Initialize the game:
 
     <script type="text/javascript">
-        minesweeper.init('#game'); // selector in which the game will be generated
+        var game = new Minesweeper2('#game'); // selector in which the game will be generated
     </script>
 
 Start a new game:
 
     <script type="text/javascript">
-        minesweeper.newGame(10, 10, 10); // columns, rows, mines
+        game.newGame(10, 10, 10); // columns, rows, mines
     </script>
 
 Have fun!
@@ -38,13 +38,13 @@ Installing via Bower
 API
 ---
 
-### Initializing on a container
+### Initializing on a container / creating a new instance
 
-    minesweeper.init('selector');
+    var game = new Minesweeper2('#game');
 
 ### Setting the flag/mine/empty/unknown icons
 
-    minesweeper.setHtmls({
+    game.setHtmls({
         empty: '&nbsp;',
         mine: 'X',
         flag: '!',
@@ -53,16 +53,29 @@ API
 
 ### Setting the callback function for winning/losing
 
-    minesweeper.setWinHandler(function () {
+    game.setWinHandler(function () {
         alert('You won, YaaaY!');
     });
-    minesweeper.setLoseHandler(function () {
+    game.setLoseHandler(function () {
         alert('Bad luck');
     });
 
 ### Starting a new game
 
-    minesweeper.newGame(10, 10, 10); // columns, rows, mines
+    game.newGame(10, 10, 10); // columns, rows, mines
+
+
+Development
+-----------
+
+For development, you'll need jQuery and Babel:
+
+    bower install
+    npm install
+
+Before commit, please don't forget to re-generate the dist files:
+
+    npm run build
 
 
 License
