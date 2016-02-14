@@ -21,7 +21,10 @@ class Minesweeper2 {
         };
 
         this.$container = jQuery('<div/>');
+        this.attachEventHandlers();
+    }
 
+    attachEventHandlers() {
         this.$container =
             jQuery(selector)
                 .empty()
@@ -31,7 +34,7 @@ class Minesweeper2 {
 
     newGame(columns, rows, mines) {
         if (columns < 5 || rows < 5 || mines < 1 || mines >= (columns * rows) / 2) {
-            return;
+            throw new Error('Invalid table size or mine number!');
         }
 
         this.columns = columns;
@@ -40,7 +43,6 @@ class Minesweeper2 {
         this.revealed = 0;
         this.eraseBoard();
         this.spreadMines(mines);
-        this.calculateMinesAround();
         this.drawTable();
         this.gameOngoing = true;
     }
@@ -73,21 +75,30 @@ class Minesweeper2 {
     }
 
     spreadMines(mines) {
-        while (mines != 0) {
+        for (let i = 0; i < mines; i++) {
+            this.putMineSomewhere();
+        }
+    }
+
+    putMineSomewhere() {
+        do {
             let i = Math.floor(Math.random() * this.rows);
             let j = Math.floor(Math.random() * this.columns);
 
             if (!this.board[i][j].mine) {
                 this.board[i][j].mine = true;
-                mines -= 1;
+                this.modifyNeighboursMineNumber(i, j);
+                break;
             }
-        }
+        } while (1);
     }
 
-    calculateMinesAround() {
-        for (let i = 0; i < this.rows; i++) {
-            for (let j = 0; j < this.columns; j++) {
-                this.board[i][j].minesAround = this.mines3x3(i, j);
+    modifyNeighboursMineNumber(row, column, increaseBy = 1) {
+        for (let i = Math.max(row - 1, 0); i <= Math.min(row + 1, this.rows - 1); i++) {
+            for (let j = Math.max(column - 1, 0); j <= Math.min(column + 1, this.columns - 1); j++) {
+                if (i != row || j != column) {
+                    this.board[i][j].minesAround += increaseBy;
+                }
             }
         }
     }
@@ -164,13 +175,7 @@ class Minesweeper2 {
         }
     }
 
-    mines3x3(row, column, evalFn) {
-        if (!evalFn) {
-            evalFn = function (cell) {
-                return cell.mine;
-            }
-        }
-
+    mines3x3(row, column, evalFn = cell => cell.mine) {
         let count = 0;
         for (let i = Math.max(row - 1, 0); i <= Math.min(row + 1, this.rows - 1); i++) {
             for (let j = Math.max(column - 1, 0); j <= Math.min(column + 1, this.columns - 1); j++) {
@@ -216,6 +221,11 @@ class Minesweeper2 {
         }
 
         if (cell.mine) {
+            if (this.revealed == 1) {
+                this.resetMine(row, column);
+                return;
+            }
+
             this.lose();
         }
 
@@ -232,6 +242,16 @@ class Minesweeper2 {
                 }
             }
         }
+    }
+
+    resetMine(row, column) {
+        let cell = this.board[row][column];
+
+        this.putMineSomewhere();
+        this.modifyNeighboursMineNumber(row, column, -1);
+        cell.minesAround = this.mines3x3(row, column);
+        cell.mine = false;
+        this.refreshCell(row, column);
     }
 
     isGameWon() {

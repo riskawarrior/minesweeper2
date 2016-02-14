@@ -33,7 +33,7 @@ var Minesweeper2 = function () {
         key: 'newGame',
         value: function newGame(columns, rows, mines) {
             if (columns < 5 || rows < 5 || mines < 1 || mines >= columns * rows / 2) {
-                return;
+                throw new Error('Invalid table size or mine number!');
             }
 
             this.columns = columns;
@@ -42,7 +42,6 @@ var Minesweeper2 = function () {
             this.revealed = 0;
             this.eraseBoard();
             this.spreadMines(mines);
-            this.calculateMinesAround();
             this.drawTable();
             this.gameOngoing = true;
         }
@@ -80,22 +79,34 @@ var Minesweeper2 = function () {
     }, {
         key: 'spreadMines',
         value: function spreadMines(mines) {
-            while (mines != 0) {
+            for (var i = 0; i < mines; i++) {
+                this.putMineSomewhere();
+            }
+        }
+    }, {
+        key: 'putMineSomewhere',
+        value: function putMineSomewhere() {
+            do {
                 var i = Math.floor(Math.random() * this.rows);
                 var j = Math.floor(Math.random() * this.columns);
 
                 if (!this.board[i][j].mine) {
                     this.board[i][j].mine = true;
-                    mines -= 1;
+                    this.modifyNeighboursMineNumber(i, j);
+                    break;
                 }
-            }
+            } while (1);
         }
     }, {
-        key: 'calculateMinesAround',
-        value: function calculateMinesAround() {
-            for (var i = 0; i < this.rows; i++) {
-                for (var j = 0; j < this.columns; j++) {
-                    this.board[i][j].minesAround = this.mines3x3(i, j);
+        key: 'modifyNeighboursMineNumber',
+        value: function modifyNeighboursMineNumber(row, column) {
+            var increaseBy = arguments.length <= 2 || arguments[2] === undefined ? 1 : arguments[2];
+
+            for (var i = Math.max(row - 1, 0); i <= Math.min(row + 1, this.rows - 1); i++) {
+                for (var j = Math.max(column - 1, 0); j <= Math.min(column + 1, this.columns - 1); j++) {
+                    if (i != row || j != column) {
+                        this.board[i][j].minesAround += increaseBy;
+                    }
                 }
             }
         }
@@ -178,12 +189,10 @@ var Minesweeper2 = function () {
         }
     }, {
         key: 'mines3x3',
-        value: function mines3x3(row, column, evalFn) {
-            if (!evalFn) {
-                evalFn = function evalFn(cell) {
-                    return cell.mine;
-                };
-            }
+        value: function mines3x3(row, column) {
+            var evalFn = arguments.length <= 2 || arguments[2] === undefined ? function (cell) {
+                return cell.mine;
+            } : arguments[2];
 
             var count = 0;
             for (var i = Math.max(row - 1, 0); i <= Math.min(row + 1, this.rows - 1); i++) {
@@ -232,6 +241,11 @@ var Minesweeper2 = function () {
             }
 
             if (cell.mine) {
+                if (this.revealed == 1) {
+                    this.resetMine(row, column);
+                    return;
+                }
+
                 this.lose();
             }
 
@@ -249,6 +263,17 @@ var Minesweeper2 = function () {
                     }
                 }
             }
+        }
+    }, {
+        key: 'resetMine',
+        value: function resetMine(row, column) {
+            var cell = this.board[row][column];
+
+            this.putMineSomewhere();
+            this.modifyNeighboursMineNumber(row, column, -1);
+            cell.minesAround = this.mines3x3(row, column);
+            cell.mine = false;
+            this.refreshCell(row, column);
         }
     }, {
         key: 'isGameWon',
