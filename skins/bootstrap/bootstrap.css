@@ -1,0 +1,9 @@
+table.minesweeper2 {
+    width: auto;
+}
+
+table.minesweeper2 td {
+    width: 37px;
+    height: 37px;
+    cursor: pointer;
+}

@@ -12,7 +12,7 @@ Clone the repository:
 Include Minesweeper2 in your webpage:
 
     <!-- Don't forget to include jQuery! -->
-    <script type="text/javascript" src="dist/minesweeper2.js"></script>
+    <script type="text/javascript" src="dist/minesweeper2.min.js"></script>
 
 Initialize the game:
 
@@ -27,6 +27,26 @@ Start a new game:
     </script>
 
 Have fun!
+
+### Keys
+
+* Left click: show cell
+* Right click: mark as mine/unkown
+
+
+Skins
+-----
+
+### Bootstrap skin
+
+1. Include Bootstrap
+2. Include Minesweeper2 Bootstrap skin
+
+    <link rel="stylesheet" href="skins/bootstrap/bootstrap.css"/>
+
+3. Instantiate a Bootstrap skinned game
+
+    var game = new BootstrapMinesweeper2('#game');
 
 
 Installing via Bower

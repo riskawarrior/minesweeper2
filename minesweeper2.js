@@ -5,6 +5,8 @@ class Minesweeper2 {
         this.board = null;
         this.columns = 0;
         this.rows = 0;
+        this.mines = 0;
+        this.revealed = 0;
         this.gameOngoing = false;
         this.winHandler = () => {
         };
@@ -34,6 +36,8 @@ class Minesweeper2 {
 
         this.columns = columns;
         this.rows = rows;
+        this.mines = mines;
+        this.revealed = 0;
         this.eraseBoard();
         this.spreadMines(mines);
         this.calculateMinesAround();
@@ -89,14 +93,15 @@ class Minesweeper2 {
     }
 
     drawTable() {
-        let $table = jQuery('<table/>');
+        let $table = jQuery('<table/>').addClass('minesweeper2');
+        let $body = jQuery('<tbody/>').appendTo($table);
 
         for (let i = 0; i < this.rows; i++) {
             let $row = jQuery('<tr/>');
             for (let j = 0; j < this.columns; j++) {
                 $row.append(jQuery('<td/>').html(this.htmls.empty));
             }
-            $table.append($row);
+            $body.append($row);
         }
 
         this.$container.empty().append($table);
@@ -138,7 +143,7 @@ class Minesweeper2 {
     }
 
     refreshCell(row, column) {
-        let $cell = this.$container.find('tr:eq(' + row + ') td:eq(' + column + ')');
+        let $cell = this.$container.find('tr:eq(' + row + ') > td:eq(' + column + ')');
         let cell = this.board[row][column];
 
         $cell.html(this.htmls.empty);
@@ -203,6 +208,7 @@ class Minesweeper2 {
         }
 
         cell.revealed = true;
+        this.revealed += 1;
         this.refreshCell(row, column);
 
         if (!cell.minesAround) {
@@ -229,15 +235,7 @@ class Minesweeper2 {
     }
 
     isGameWon() {
-        for (let i = 0; i < this.rows; i++) {
-            for (let j = 0; j < this.columns; j++) {
-                if (!this.board[i][j].mine && !this.board[i][j].revealed) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return this.rows * this.columns == this.mines + this.revealed;
     }
 
     lose() {

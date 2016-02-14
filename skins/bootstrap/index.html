@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Minesweeper2 Bootstrap skin</title>
+    <script type="text/javascript" src="../../bower_components/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+          crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="bootstrap.css"/>
+    <script type="text/javascript" src="../../dist/minesweeper2.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div id="game"></div>
+    <div id="controls">
+        <form onsubmit="return newGame();">
+            <div class="form-group">
+                <label for="rows">Rows: </label>
+                <input id="rows" class="form-control" name="rows" type="number" value="10" placeholder="Rows"/>
+            </div>
+
+            <div class="form-group">
+                <label for="cols">Columns: </label>
+                <input id="cols" class="form-control" name="cols" type="number" value="10" placeholder="Columns"/>
+            </div>
+
+            <div class="form-group">
+                <label for="mines">Mines: </label>
+                <input id="mines" class="form-control" name="mines" type="number" value="10" placeholder="Mines"/>
+            </div>
+            <input name="submit" type="submit" class="btn btn-default" value="New Game">
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    var game;
+
+    var newGame = function () {
+        game.newGame(cols.value, rows.value, mines.value);
+        return false;
+    };
+
+    $(function () {
+        game = new BootstrapMinesweeper2('#game');
+        game.setWinHandler(function () {
+            alert('You won, YaaaY!');
+        });
+        game.setLoseHandler(function () {
+            alert('Bad luck');
+        });
+        game.newGame(10, 10, 10);
+    });
+</script>
+</body>
+</html>

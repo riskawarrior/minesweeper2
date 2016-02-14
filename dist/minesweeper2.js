@@ -11,6 +11,8 @@ var Minesweeper2 = function () {
         this.board = null;
         this.columns = 0;
         this.rows = 0;
+        this.mines = 0;
+        this.revealed = 0;
         this.gameOngoing = false;
         this.winHandler = function () {};
         this.loseHandler = function () {};
@@ -36,6 +38,8 @@ var Minesweeper2 = function () {
 
             this.columns = columns;
             this.rows = rows;
+            this.mines = mines;
+            this.revealed = 0;
             this.eraseBoard();
             this.spreadMines(mines);
             this.calculateMinesAround();
@@ -98,14 +102,15 @@ var Minesweeper2 = function () {
     }, {
         key: 'drawTable',
         value: function drawTable() {
-            var $table = jQuery('<table/>');
+            var $table = jQuery('<table/>').addClass('minesweeper2');
+            var $body = jQuery('<tbody/>').appendTo($table);
 
             for (var i = 0; i < this.rows; i++) {
                 var $row = jQuery('<tr/>');
                 for (var j = 0; j < this.columns; j++) {
                     $row.append(jQuery('<td/>').html(this.htmls.empty));
                 }
-                $table.append($row);
+                $body.append($row);
             }
 
             this.$container.empty().append($table);
@@ -151,7 +156,7 @@ var Minesweeper2 = function () {
     }, {
         key: 'refreshCell',
         value: function refreshCell(row, column) {
-            var $cell = this.$container.find('tr:eq(' + row + ') td:eq(' + column + ')');
+            var $cell = this.$container.find('tr:eq(' + row + ') > td:eq(' + column + ')');
             var cell = this.board[row][column];
 
             $cell.html(this.htmls.empty);
@@ -219,6 +224,7 @@ var Minesweeper2 = function () {
             }
 
             cell.revealed = true;
+            this.revealed += 1;
             this.refreshCell(row, column);
 
             if (!cell.minesAround) {
@@ -247,15 +253,7 @@ var Minesweeper2 = function () {
     }, {
         key: 'isGameWon',
         value: function isGameWon() {
-            for (var i = 0; i < this.rows; i++) {
-                for (var j = 0; j < this.columns; j++) {
-                    if (!this.board[i][j].mine && !this.board[i][j].revealed) {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
+            return this.rows * this.columns == this.mines + this.revealed;
         }
     }, {
         key: 'lose',
@@ -277,3 +275,43 @@ var Minesweeper2 = function () {
 
     return Minesweeper2;
 }();
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BootstrapMinesweeper2 = function (_Minesweeper) {
+    _inherits(BootstrapMinesweeper2, _Minesweeper);
+
+    function BootstrapMinesweeper2(selector) {
+        _classCallCheck(this, BootstrapMinesweeper2);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BootstrapMinesweeper2).call(this, selector));
+
+        _this.htmls = {
+            empty: '&nbsp;',
+            mine: '<span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>',
+            flag: '<span class="glyphicon glyphicon-flag" aria-hidden="true"></span>',
+            unknown: '<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>'
+        };
+        return _this;
+    }
+
+    _createClass(BootstrapMinesweeper2, [{
+        key: 'drawTable',
+        value: function drawTable() {
+            _get(Object.getPrototypeOf(BootstrapMinesweeper2.prototype), 'drawTable', this).call(this);
+
+            this.$container.children().addClass('table-bordered table text-center');
+        }
+    }]);
+
+    return BootstrapMinesweeper2;
+}(Minesweeper2);
