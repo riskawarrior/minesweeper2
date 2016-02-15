@@ -20,16 +20,15 @@ class Minesweeper2 {
             unknown: '?'
         };
 
-        this.$container = jQuery('<div/>');
+        this.$container = jQuery(selector);
         this.attachEventHandlers();
     }
 
     attachEventHandlers() {
-        this.$container =
-            jQuery(selector)
-                .empty()
-                .on('click', 'td', this.showMineHandler(this))
-                .on('contextmenu', 'td', this.flagHandler(this));
+        this.$container
+            .empty()
+            .on('click', 'td', this.showMineHandler(this))
+            .on('contextmenu', 'td', this.flagHandler(this));
     }
 
     newGame(columns, rows, mines) {
@@ -37,9 +36,9 @@ class Minesweeper2 {
             throw new Error('Invalid table size or mine number!');
         }
 
-        this.columns = columns;
-        this.rows = rows;
-        this.mines = mines;
+        this.columns = Number(columns);
+        this.rows = Number(rows);
+        this.mines = Number(mines);
         this.revealed = 0;
         this.eraseBoard();
         this.spreadMines(mines);
@@ -255,6 +254,7 @@ class Minesweeper2 {
     }
 
     isGameWon() {
+        console.log(this.rows * this.columns, this.mines + this.revealed);
         return this.rows * this.columns == this.mines + this.revealed;
     }
 

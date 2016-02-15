@@ -24,21 +24,25 @@ var Minesweeper2 = function () {
             unknown: '?'
         };
 
-        this.$container = jQuery('<div/>');
-
-        this.$container = jQuery(selector).empty().on('click', 'td', this.showMineHandler(this)).on('contextmenu', 'td', this.flagHandler(this));
+        this.$container = jQuery(selector);
+        this.attachEventHandlers();
     }
 
     _createClass(Minesweeper2, [{
+        key: 'attachEventHandlers',
+        value: function attachEventHandlers() {
+            this.$container.empty().on('click', 'td', this.showMineHandler(this)).on('contextmenu', 'td', this.flagHandler(this));
+        }
+    }, {
         key: 'newGame',
         value: function newGame(columns, rows, mines) {
             if (columns < 5 || rows < 5 || mines < 1 || mines >= columns * rows / 2) {
                 throw new Error('Invalid table size or mine number!');
             }
 
-            this.columns = columns;
-            this.rows = rows;
-            this.mines = mines;
+            this.columns = Number(columns);
+            this.rows = Number(rows);
+            this.mines = Number(mines);
             this.revealed = 0;
             this.eraseBoard();
             this.spreadMines(mines);
@@ -278,6 +282,7 @@ var Minesweeper2 = function () {
     }, {
         key: 'isGameWon',
         value: function isGameWon() {
+            console.log(this.rows * this.columns, this.mines + this.revealed);
             return this.rows * this.columns == this.mines + this.revealed;
         }
     }, {
